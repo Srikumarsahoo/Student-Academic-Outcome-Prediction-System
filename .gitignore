@@ -1,0 +1,77 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+secrets/
+
+# Python virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python caches and build outputs
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Private data and generated logs
+data/**
+!data/.gitkeep
+logs/
+*.log
+*.csv
+*.tsv
+*.xlsx
+*.xls
+*.parquet
+*.feather
+*.sqlite
+*.sqlite3
+*.db
+
+# Local prediction and analytics exports
+predictions.csv
+student_predictions.csv
+exports/
+reports/generated/
+
+# Notebook checkpoints and research scratch work
+.ipynb_checkpoints/
+notebooks/
+
+# Keep trained model artifacts deployable.
+# If model files are private or too large for GitHub, uncomment these lines
+# and load them from object storage or Render disks instead.
+# models/*.pkl
+# models/*.joblib
+
+# IDE, editor, and OS clutter
+.vscode/
+.idea/
+*.code-workspace
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local tooling and agent metadata
+.agents/
+.codex/
+
+# Docker and runtime temp files
+*.pid
+tmp/
+temp/

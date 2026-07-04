@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Prediction Analytics{% endblock %}
+
+{% block content %}
+<section class="page-header" id="top">
+    <div class="container">
+        <span class="eyebrow">Analytics dashboard</span>
+        <h1>Anonymous prediction activity</h1>
+        <p>Monitor total predictions, outcome distribution, confidence bands, model usage, trends, and recent records from CSV logging.</p>
+    </div>
+</section>
+
+<section class="section pt-0">
+    <div class="container">
+        <div class="dashboard-actions">
+            <input class="form-control" id="analyticsSearch" type="search" placeholder="Search recent predictions">
+            <a class="btn btn-outline-primary" href="/analytics/download"><i class="bi bi-download"></i> CSV</a>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-3"><div class="stat-card"><i class="bi bi-bar-chart"></i><h2>{{ summary.total_predictions }}</h2><p>Total Predictions</p></div></div>
+            <div class="col-md-3"><div class="stat-card"><i class="bi bi-check-circle"></i><h2>{{ summary.prediction_distribution.get('Graduate', 0) }}</h2><p>Graduate</p></div></div>
+            <div class="col-md-3"><div class="stat-card"><i class="bi bi-exclamation-triangle"></i><h2>{{ summary.prediction_distribution.get('Dropout', 0) }}</h2><p>Dropout</p></div></div>
+            <div class="col-md-3"><div class="stat-card"><i class="bi bi-hourglass-split"></i><h2>{{ summary.prediction_distribution.get('Enrolled', 0) }}</h2><p>Enrolled</p></div></div>
+        </div>
+
+        <div class="row g-4 mt-1">
+            <div class="col-lg-6"><div class="chart-card"><h5>Prediction Distribution</h5><canvas id="predictionChart" data-chart='{{ summary.prediction_distribution | tojson }}'></canvas></div></div>
+            <div class="col-lg-6"><div class="chart-card"><h5>Confidence Distribution</h5><canvas id="confidenceChart" data-chart='{{ summary.confidence_distribution | tojson }}'></canvas></div></div>
+            <div class="col-lg-6"><div class="chart-card"><h5>Model Usage</h5><canvas id="modelChart" data-chart='{{ summary.model_usage | tojson }}'></canvas></div></div>
+            <div class="col-lg-6"><div class="chart-card"><h5>Prediction Trend</h5><canvas id="trendChart" data-chart='{{ summary.trend | tojson }}'></canvas></div></div>
+        </div>
+
+        <div class="table-shell mt-4">
+            <div class="table-responsive">
+                <table class="table align-middle" id="recentTable">
+                    <thead><tr><th>Timestamp</th><th>Prediction</th><th>Confidence</th><th>Model</th><th>Latency</th></tr></thead>
+                    <tbody>
+                    {% for row in summary.recent_predictions %}
+                    <tr>
+                        <td>{{ row.timestamp }}</td>
+                        <td><span class="badge text-bg-primary">{{ row.prediction }}</span></td>
+                        <td>{{ (row.confidence * 100) | round(2) }}%</td>
+                        <td>{{ row.model_display if row.model_display else row.model }}</td>
+                        <td>{{ row.latency_ms }} ms</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="5" class="text-center text-secondary">No prediction records yet.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Predict Student Outcome{% endblock %}
+
+{% macro field_help(text) -%}
+<button type="button" class="hint" data-bs-toggle="tooltip" data-bs-title="{{ text }}"><i class="bi bi-info-circle"></i></button>
+{%- endmacro %}
+
+{% block content %}
+<section class="page-header" id="top">
+    <div class="container">
+        <span class="eyebrow">Prediction workspace</span>
+        <h1>Predict a student outcome</h1>
+        <p>Complete the sections with human-readable academic information. The system will engineer the model features privately and return outcome probabilities.</p>
+    </div>
+</section>
+
+<section class="section pt-0">
+    <div class="container">
+        {% if errors %}
+        <div class="alert alert-danger">
+            <strong>Please review the form.</strong>
+            {% for error in errors %}
+            <div>{{ error }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="post" action="/predict" class="prediction-form needs-validation" novalidate>
+            <div class="progress-shell">
+                <div class="progress">
+                    <div class="progress-bar" id="formProgress" style="width: 16%"></div>
+                </div>
+                <span id="progressLabel">Step 1 of 7</span>
+            </div>
+
+            <div class="form-section" data-step>
+                <h3><i class="bi bi-person"></i> Personal Information</h3>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Age {{ field_help("Age at enrollment, between 16 and 80.") }}</label>
+                        <input class="form-control" type="number" name="age" min="16" max="80" placeholder="Example: 21" value="{{ form_data.age if form_data else '' }}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Gender {{ field_help("Dataset encoding: 0 for female, 1 for male.") }}</label>
+                        <select class="form-select" name="gender" required>
+                            <option value="">Select gender</option>
+                            <option value="0" {% if form_data and form_data.gender == 0 %}selected{% endif %}>Female</option>
+                            <option value="1" {% if form_data and form_data.gender == 1 %}selected{% endif %}>Male</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Course {{ field_help("Academic program selected during enrollment.") }}</label>
+                        <select class="form-select" name="course" required>
+                            <option value="">Select course</option>
+                            {% for value, label in courses %}
+                            <option value="{{ value }}" {% if form_data and form_data.course == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section" data-step>
+                <h3><i class="bi bi-journal-check"></i> Academic Information</h3>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Admission Grade {{ field_help("Admission score on the original 0 to 200 scale.") }}</label>
+                        <input class="form-control" type="number" step="0.1" name="admission_grade" min="0" max="200" placeholder="Example: 135.4" value="{{ form_data.admission_grade if form_data else '' }}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Prediction Model {{ field_help("Random Forest is selected by default and recommended.") }}</label>
+                        <select class="form-select" name="model" required>
+                            {% for model in models %}
+                            <option value="{{ model.key }}" {% if (form_data and form_data.model == model.key) or (not form_data and model.recommended) %}selected{% endif %}>{{ model.display_name }}{% if model.recommended %} (Recommended){% endif %}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section" data-step>
+                <h3><i class="bi bi-wallet2"></i> Financial Information</h3>
+                <div class="row g-3">
+                    <div class="col-md-4"><label class="form-label">Scholarship Holder {{ field_help("Whether the student receives scholarship support.") }}</label><select class="form-select" name="scholarship_holder" required><option value="">Select</option><option value="1" {% if form_data and form_data.scholarship_holder == 1 %}selected{% endif %}>Yes</option><option value="0" {% if form_data and form_data.scholarship_holder == 0 %}selected{% endif %}>No</option></select></div>
+                    <div class="col-md-4"><label class="form-label">Debtor {{ field_help("Whether the student has recorded debt.") }}</label><select class="form-select" name="debtor" required><option value="">Select</option><option value="1" {% if form_data and form_data.debtor == 1 %}selected{% endif %}>Yes</option><option value="0" {% if form_data and form_data.debtor == 0 %}selected{% endif %}>No</option></select></div>
+                    <div class="col-md-4"><label class="form-label">Tuition Fees Up To Date {{ field_help("Whether tuition payments are current.") }}</label><select class="form-select" name="tuition_fees_up_to_date" required><option value="">Select</option><option value="1" {% if form_data and form_data.tuition_fees_up_to_date == 1 %}selected{% endif %}>Yes</option><option value="0" {% if form_data and form_data.tuition_fees_up_to_date == 0 %}selected{% endif %}>No</option></select></div>
+                </div>
+            </div>
+
+            <div class="form-section" data-step>
+                <h3><i class="bi bi-1-circle"></i> Semester 1</h3>
+                <div class="row g-3">
+                    <div class="col-md-4"><label class="form-label">Enrolled Credits {{ field_help("Number of curricular units enrolled in semester 1.") }}</label><input class="form-control" type="number" name="sem1_enrolled" min="0" max="40" placeholder="Example: 6" value="{{ form_data.sem1_enrolled if form_data else '' }}" required></div>
+                    <div class="col-md-4"><label class="form-label">Approved Credits {{ field_help("Number of semester 1 units approved. Must not exceed enrolled credits.") }}</label><input class="form-control" type="number" name="sem1_approved" min="0" max="40" placeholder="Example: 5" value="{{ form_data.sem1_approved if form_data else '' }}" required></div>
+                    <div class="col-md-4"><label class="form-label">Grade {{ field_help("Semester 1 average grade on a 0 to 20 scale.") }}</label><input class="form-control" type="number" step="0.1" name="sem1_grade" min="0" max="20" placeholder="Example: 12.5" value="{{ form_data.sem1_grade if form_data else '' }}" required></div>
+                </div>
+            </div>
+
+            <div class="form-section" data-step>
+                <h3><i class="bi bi-2-circle"></i> Semester 2</h3>
+                <div class="row g-3">
+                    <div class="col-md-4"><label class="form-label">Enrolled Credits {{ field_help("Number of curricular units enrolled in semester 2.") }}</label><input class="form-control" type="number" name="sem2_enrolled" min="0" max="40" placeholder="Example: 6" value="{{ form_data.sem2_enrolled if form_data else '' }}" required></div>
+                    <div class="col-md-4"><label class="form-label">Approved Credits {{ field_help("Number of semester 2 units approved. Must not exceed enrolled credits.") }}</label><input class="form-control" type="number" name="sem2_approved" min="0" max="40" placeholder="Example: 6" value="{{ form_data.sem2_approved if form_data else '' }}" required></div>
+                    <div class="col-md-4"><label class="form-label">Grade {{ field_help("Semester 2 average grade on a 0 to 20 scale.") }}</label><input class="form-control" type="number" step="0.1" name="sem2_grade" min="0" max="20" placeholder="Example: 13.1" value="{{ form_data.sem2_grade if form_data else '' }}" required></div>
+                </div>
+            </div>
+
+            <div class="form-section" data-step>
+                <h3><i class="bi bi-people"></i> Parent Information</h3>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Mother Qualification {{ field_help("Highest education category for the student's mother.") }}</label>
+                        <select class="form-select" name="mother_qualification" required>
+                            <option value="">Select qualification</option>
+                            {% for value, label in qualifications %}<option value="{{ value }}" {% if form_data and form_data.mother_qualification == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Father Qualification {{ field_help("Highest education category for the student's father.") }}</label>
+                        <select class="form-select" name="father_qualification" required>
+                            <option value="">Select qualification</option>
+                            {% for value, label in qualifications %}<option value="{{ value }}" {% if form_data and form_data.father_qualification == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section final-step" data-step>
+                <h3><i class="bi bi-shield-check"></i> Prediction Model</h3>
+                <p>Review your entries, then run inference. The result page will show the predicted class, confidence, all class probabilities, selected model, and timestamp.</p>
+                <button type="submit" class="btn btn-primary btn-lg"><i class="bi bi-lightning-charge"></i> Generate Prediction</button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

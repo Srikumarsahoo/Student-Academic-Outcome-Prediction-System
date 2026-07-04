@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Research Methodology{% endblock %}
+
+{% block content %}
+<section class="page-header" id="top">
+    <div class="container">
+        <span class="eyebrow">Research methodology</span>
+        <h1>Model development and evaluation</h1>
+        <p>A portfolio-ready research page covering EDA, feature engineering, PCA, model comparison, diagnostics, findings, and future work.</p>
+    </div>
+</section>
+
+<section class="section pt-0">
+    <div class="container">
+        <div class="research-grid">
+            {% set topics = [
+                ('bi-clipboard-data', 'EDA', 'Explored class balance, academic unit completion, grades, financial indicators, and demographic relationships.'),
+                ('bi-calculator', 'Statistics', 'Compared outcome groups using descriptive statistics across admission, semester, and financial features.'),
+                ('bi-sliders', 'Feature Engineering', 'Created approval rates, average semester grade, grade improvement, financial risk, parent education, engagement, and approved credit totals.'),
+                ('bi-boxes', 'PCA', 'Used dimensionality reduction to inspect separability and feature structure without replacing interpretable tabular modeling.'),
+                ('bi-trophy', 'Model Comparison', 'Benchmarked Random Forest, Voting Classifier, and Logistic Regression with accuracy and weighted F1.'),
+                ('bi-activity', 'Learning Curves', 'Reviewed train and validation behavior to reason about bias, variance, and data sensitivity.'),
+                ('bi-graph-up', 'Validation Curves', 'Inspected model response to important hyperparameters for robust selection.'),
+                ('bi-grid-3x3', 'Confusion Matrices', 'Compared class-level errors across Graduate, Dropout, and Enrolled outcomes.'),
+                ('bi-stars', 'Feature Importance', 'Academic progress and semester grades consistently carry strong predictive signal.'),
+                ('bi-lightbulb', 'Lessons Learned', 'Outcome prediction benefits from combining academic performance, financial risk, and engagement features.'),
+                ('bi-arrow-up-right-circle', 'Future Work', 'Add XGBoost, SHAP explanations, calibrated probabilities, authenticated dashboards, and notebook-to-report automation.')
+            ] %}
+            {% for icon, title, body in topics %}
+            <div class="feature-card">
+                <i class="bi {{ icon }}"></i>
+                <h5>{{ title }}</h5>
+                <p>{{ body }}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="section-heading mt-5">
+            <span class="eyebrow">Model comparison</span>
+            <h2>Current trained models</h2>
+        </div>
+        <div class="row g-4">
+            {% for model in models %}
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <h5>{{ model.display_name }}</h5>
+                    <p>{{ model.description }}</p>
+                    {% if model.recommended %}<span class="badge text-bg-primary">Default production choice</span>{% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

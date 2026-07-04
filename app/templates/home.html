@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Student Academic Outcome Prediction{% endblock %}
+
+{% block content %}
+<section class="hero-section" id="top">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <span class="eyebrow">Machine learning for academic outcomes</span>
+                <h1>Student Academic Outcome Prediction System</h1>
+                <p class="lead">Predict whether a university student is likely to Graduate, Dropout, or remain Enrolled using trained scikit-learn models and transparent probability outputs.</p>
+                <div class="hero-actions">
+                    <a href="/predict" class="btn btn-primary btn-lg"><i class="bi bi-stars"></i> Start Prediction</a>
+                    <a href="/research" class="btn btn-outline-primary btn-lg">View Research</a>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="insight-panel">
+                    <div class="panel-header">
+                        <span>Recommended model</span>
+                        <strong>Random Forest</strong>
+                    </div>
+                    <div class="metric-row"><span>Accuracy</span><strong>77%</strong></div>
+                    <div class="metric-row"><span>Weighted F1</span><strong>0.77</strong></div>
+                    <div class="metric-row"><span>Outcome classes</span><strong>3</strong></div>
+                    <div class="confidence-strip"><span style="width: 77%"></span></div>
+                    <small>Built for students, researchers, recruiters, professors, and data science learners.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-3"><div class="stat-card"><i class="bi bi-bullseye"></i><h2>77%</h2><p>Accuracy</p></div></div>
+            <div class="col-md-3"><div class="stat-card"><i class="bi bi-graph-up-arrow"></i><h2>0.77</h2><p>Weighted F1</p></div></div>
+            <div class="col-md-3"><div class="stat-card"><i class="bi bi-cpu"></i><h2>3</h2><p>Available models</p></div></div>
+            <div class="col-md-3"><div class="stat-card"><i class="bi bi-database"></i><h2>4,400+</h2><p>Dataset records</p></div></div>
+        </div>
+    </div>
+</section>
+
+<section class="section section-muted">
+    <div class="container">
+        <div class="section-heading">
+            <span class="eyebrow">Workflow</span>
+            <h2>How the system works</h2>
+        </div>
+        <div class="timeline">
+            <div><span>1</span><h5>Enter readable information</h5><p>Users provide academic, financial, semester, and parent education values.</p></div>
+            <div><span>2</span><h5>Engineer training features</h5><p>The backend calculates approval rates, grade movement, risk indicators, and engagement metrics.</p></div>
+            <div><span>3</span><h5>Run selected model</h5><p>Random Forest, Voting Classifier, or Logistic Regression returns class probabilities.</p></div>
+            <div><span>4</span><h5>Log anonymous results</h5><p>Predictions are stored in CSV for future research and dashboard analytics.</p></div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="section-heading">
+            <span class="eyebrow">Models</span>
+            <h2>Selectable ML backends</h2>
+        </div>
+        <div class="row g-4">
+            {% for model in models %}
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <i class="bi bi-diagram-3"></i>
+                    <h5>{{ model.display_name }} {% if model.recommended %}<span class="badge text-bg-primary">Recommended</span>{% endif %}</h5>
+                    <p>{{ model.description }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="section section-muted">
+    <div class="container">
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-6">
+                <span class="eyebrow">Research highlights</span>
+                <h2>Designed to explain methodology, not only output a label.</h2>
+                <p>The project documents feature engineering, EDA, dimensionality reduction, model comparison, validation behavior, confusion matrices, and future research work.</p>
+            </div>
+            <div class="col-lg-6">
+                <div class="tech-grid">
+                    <span>FastAPI</span><span>Jinja2</span><span>Scikit-learn</span><span>Pandas</span><span>Bootstrap 5</span><span>Chart.js</span><span>Docker</span><span>Render</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Prediction Result{% endblock %}
+
+{% block content %}
+<section class="page-header" id="top">
+    <div class="container">
+        <span class="eyebrow">Prediction result</span>
+        <h1>{{ result.prediction }}</h1>
+        <p>The selected model returned a {{ confidence_percent }}% confidence score for this outcome.</p>
+    </div>
+</section>
+
+<section class="section pt-0">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-5">
+                <div class="result-card">
+                    <span class="result-label">Predicted outcome</span>
+                    <h2>{{ result.prediction }}</h2>
+                    <div class="progress result-progress">
+                        <div class="progress-bar" style="width: {{ confidence_percent }}%">{{ confidence_percent }}%</div>
+                    </div>
+                    <p>Confidence represents the highest probability among the three available academic outcome classes.</p>
+                    <div class="result-meta">
+                        <span><i class="bi bi-cpu"></i> {{ result.model_display }}</span>
+                        <span><i class="bi bi-clock"></i> {{ result.timestamp }}</span>
+                        <span><i class="bi bi-speedometer2"></i> {{ result.latency_ms }} ms</span>
+                    </div>
+                    <a href="/predict" class="btn btn-primary w-100 mt-3"><i class="bi bi-arrow-repeat"></i> Make Another Prediction</a>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="content-panel">
+                    <h3>Class probabilities</h3>
+                    {% for label, probability in probabilities.items() %}
+                    <div class="probability-row">
+                        <div><strong>{{ label }}</strong><span>{{ probability }}%</span></div>
+                        <div class="progress"><div class="progress-bar" style="width: {{ probability }}%"></div></div>
+                    </div>
+                    {% endfor %}
+                    <h3 class="mt-4">Explanation</h3>
+                    <p>The model evaluates academic progress, semester grades, approval rates, financial risk, parent education, and engagement signals. This prediction is a decision-support output, not a final academic determination.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

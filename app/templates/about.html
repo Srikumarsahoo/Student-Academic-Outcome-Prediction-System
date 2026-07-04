@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}About The Project{% endblock %}
+
+{% block content %}
+<section class="page-header" id="top">
+    <div class="container">
+        <span class="eyebrow">About</span>
+        <h1>Production-quality ML portfolio project</h1>
+        <p>This application predicts academic outcomes while demonstrating clean architecture, model serving, research communication, validation, analytics, and deployment readiness.</p>
+    </div>
+</section>
+
+<section class="section pt-0">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-7">
+                <div class="content-panel">
+                    <h3>Project</h3>
+                    <p>The system helps students, researchers, and academic stakeholders explore whether a student is likely to graduate, drop out, or remain enrolled. It is designed as a modern SaaS-style web app rather than a notebook-only demonstration.</p>
+                    <h3>Dataset and workflow</h3>
+                    <p>The workflow includes preprocessing, feature engineering, trained scikit-learn models, probability explanation, anonymous prediction logging, and dashboard aggregation.</p>
+                    <h3>Future improvements</h3>
+                    <p>Planned enhancements include SHAP explanations, calibrated probabilities, additional models such as Gradient Boosting or XGBoost, richer research images, and role-based analytics.</p>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="content-panel">
+                    <h3>Technologies</h3>
+                    <div class="tech-grid compact">
+                        <span>FastAPI</span><span>Pydantic</span><span>Jinja2</span><span>Bootstrap</span><span>Chart.js</span><span>Scikit-learn</span><span>Joblib</span><span>Pandas</span>
+                    </div>
+                    <h3 class="mt-4">Models</h3>
+                    {% for model in models %}
+                    <div class="model-line"><strong>{{ model.display_name }}</strong><span>{{ model.description }}</span></div>
+                    {% endfor %}
+                    <h3 class="mt-4">Author</h3>
+                    <p>Srikumar Sahoo</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
