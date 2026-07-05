@@ -13,9 +13,6 @@ Production-style FastAPI and scikit-learn web application that predicts whether 
 - Research, methodology, and about pages
 - Modular service, schema, route, and configuration layers
 
-## Screenshots
-
-Add screenshots from the running application before publishing the repository.
 
 ## Project Workflow
 
