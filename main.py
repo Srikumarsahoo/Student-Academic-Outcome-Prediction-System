@@ -1,5 +1,11 @@
+# pyrefly: ignore [missing-import]
 from fastapi import FastAPI
+# pyrefly: ignore [missing-import]
 from fastapi.staticfiles import StaticFiles
+# pyrefly: ignore [missing-import]
+from fastapi.middleware.cors import CORSMiddleware
+# pyrefly: ignore [missing-import]
+from fastapi.middleware.gzip import GZipMiddleware
 
 from app.api.routes import router as page_router
 from app.api.prediction import router as prediction_router
@@ -7,13 +13,27 @@ from app.api.prediction import router as prediction_router
 from app.core.config import settings
 from app.core.startup import startup
 
+# pyrefly: ignore [missing-import]
 from fastapi.responses import JSONResponse
+# pyrefly: ignore [missing-import]
 from fastapi import Request
+
 
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.VERSION,
     debug=settings.DEBUG,
+)
+
+# GZip compression for faster page loads
+app.add_middleware(GZipMiddleware, minimum_size=500)
+
+# CORS middleware for API flexibility
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 startup()

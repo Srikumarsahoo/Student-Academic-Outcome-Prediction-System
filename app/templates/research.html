@@ -5,9 +5,9 @@
 {% block content %}
 <section class="page-header" id="top">
     <div class="container">
-        <span class="eyebrow">Research methodology</span>
-        <h1>Model development and evaluation</h1>
-        <p>A portfolio-ready research page covering EDA, feature engineering, PCA, model comparison, diagnostics, findings, and future work.</p>
+        <span class="eyebrow"><i class="bi bi-journal-bookmark"></i> Research Methodology</span>
+        <h1>Model Development & Evaluation</h1>
+        <p>A comprehensive research page covering EDA, feature engineering, PCA, model comparison, diagnostics, findings, and future work.</p>
     </div>
 </section>
 
@@ -15,20 +15,20 @@
     <div class="container">
         <div class="research-grid">
             {% set topics = [
-                ('bi-clipboard-data', 'EDA', 'Explored class balance, academic unit completion, grades, financial indicators, and demographic relationships.'),
-                ('bi-calculator', 'Statistics', 'Compared outcome groups using descriptive statistics across admission, semester, and financial features.'),
+                ('bi-clipboard-data', 'Exploratory Data Analysis', 'Explored class balance, academic unit completion, grades, financial indicators, and demographic relationships across the entire dataset.'),
+                ('bi-calculator', 'Statistical Analysis', 'Compared outcome groups using descriptive statistics across admission, semester, and financial features for significance testing.'),
                 ('bi-sliders', 'Feature Engineering', 'Created approval rates, average semester grade, grade improvement, financial risk, parent education, engagement, and approved credit totals.'),
-                ('bi-boxes', 'PCA', 'Used dimensionality reduction to inspect separability and feature structure without replacing interpretable tabular modeling.'),
-                ('bi-trophy', 'Model Comparison', 'Benchmarked Random Forest, Voting Classifier, and Logistic Regression with accuracy and weighted F1.'),
-                ('bi-activity', 'Learning Curves', 'Reviewed train and validation behavior to reason about bias, variance, and data sensitivity.'),
-                ('bi-graph-up', 'Validation Curves', 'Inspected model response to important hyperparameters for robust selection.'),
-                ('bi-grid-3x3', 'Confusion Matrices', 'Compared class-level errors across Graduate, Dropout, and Enrolled outcomes.'),
-                ('bi-stars', 'Feature Importance', 'Academic progress and semester grades consistently carry strong predictive signal.'),
-                ('bi-lightbulb', 'Lessons Learned', 'Outcome prediction benefits from combining academic performance, financial risk, and engagement features.'),
+                ('bi-boxes', 'PCA Visualization', 'Used dimensionality reduction to inspect separability and feature structure without replacing interpretable tabular modeling.'),
+                ('bi-trophy', 'Model Comparison', 'Benchmarked Random Forest, Voting Classifier, and Logistic Regression using accuracy and weighted F1 score metrics.'),
+                ('bi-activity', 'Learning Curves', 'Reviewed train and validation behavior to reason about bias, variance, and data sensitivity across model types.'),
+                ('bi-graph-up', 'Validation Curves', 'Inspected model response to important hyperparameters for robust and generalizable model selection.'),
+                ('bi-grid-3x3', 'Confusion Matrices', 'Compared class-level errors across Graduate, Dropout, and Enrolled outcomes to understand per-class strengths.'),
+                ('bi-stars', 'Feature Importance', 'Academic progress and semester grades consistently carry the strongest predictive signal across all models.'),
+                ('bi-lightbulb', 'Lessons Learned', 'Outcome prediction benefits from combining academic performance, financial risk, and engagement features in ensemble models.'),
                 ('bi-arrow-up-right-circle', 'Future Work', 'Add XGBoost, SHAP explanations, calibrated probabilities, authenticated dashboards, and notebook-to-report automation.')
             ] %}
             {% for icon, title, body in topics %}
-            <div class="feature-card">
+            <div class="feature-card reveal reveal-delay-{{ (loop.index0 % 4) + 1 }}">
                 <i class="bi {{ icon }}"></i>
                 <h5>{{ title }}</h5>
                 <p>{{ body }}</p>
@@ -36,17 +36,18 @@
             {% endfor %}
         </div>
 
-        <div class="section-heading mt-5">
-            <span class="eyebrow">Model comparison</span>
-            <h2>Current trained models</h2>
+        <div class="section-heading mt-5 reveal">
+            <span class="eyebrow"><i class="bi bi-cpu"></i> Model Comparison</span>
+            <h2>Trained prediction models</h2>
         </div>
         <div class="row g-4">
             {% for model in models %}
-            <div class="col-md-4">
+            <div class="col-md-4 reveal reveal-delay-{{ loop.index }}">
                 <div class="feature-card">
+                    <i class="bi bi-diagram-3"></i>
                     <h5>{{ model.display_name }}</h5>
                     <p>{{ model.description }}</p>
-                    {% if model.recommended %}<span class="badge text-bg-primary">Default production choice</span>{% endif %}
+                    {% if model.recommended %}<span class="badge text-bg-primary mt-2">Default Production Choice</span>{% endif %}
                 </div>
             </div>
             {% endfor %}

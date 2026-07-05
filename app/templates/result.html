@@ -1,49 +1,136 @@
 {% extends "base.html" %}
 
-{% block title %}Prediction Result{% endblock %}
+{% block title %}Prediction Result — {{ result.prediction }}{% endblock %}
+
+{% set outcome_class = 'outcome-graduate' if result.prediction == 'Graduate' else ('outcome-dropout' if result.prediction == 'Dropout' else 'outcome-enrolled') %}
 
 {% block content %}
-<section class="page-header" id="top">
+<section class="page-header {{ outcome_class }}" id="top">
     <div class="container">
-        <span class="eyebrow">Prediction result</span>
+        <span class="eyebrow"><i class="bi bi-check-circle"></i> Prediction Complete</span>
         <h1>{{ result.prediction }}</h1>
-        <p>The selected model returned a {{ confidence_percent }}% confidence score for this outcome.</p>
+        <p>The model returned a <strong>{{ confidence_percent }}%</strong> confidence score for this outcome.</p>
     </div>
 </section>
 
-<section class="section pt-0">
+<section class="section pt-0 {{ outcome_class }}">
     <div class="container">
         <div class="row g-4">
-            <div class="col-lg-5">
+            <div class="col-lg-5 reveal">
                 <div class="result-card">
-                    <span class="result-label">Predicted outcome</span>
+                    <span class="result-label">Predicted Outcome</span>
                     <h2>{{ result.prediction }}</h2>
-                    <div class="progress result-progress">
-                        <div class="progress-bar" style="width: {{ confidence_percent }}%">{{ confidence_percent }}%</div>
+
+                    <!-- Circular Confidence Gauge -->
+                    <div class="gauge-container">
+                        <svg class="gauge-svg" viewBox="0 0 100 100">
+                            <circle class="gauge-bg" cx="50" cy="50" r="45" />
+                            <circle class="gauge-fill" cx="50" cy="50" r="45"
+                                stroke-dasharray="{{ (confidence_percent / 100) * 283 }} 283"
+                                style="animation: gaugeAnimation 1.5s ease-out;" />
+                        </svg>
+                        <div class="gauge-label">
+                            <span class="gauge-value">{{ confidence_percent }}%</span>
+                            <span class="gauge-text">Confidence</span>
+                        </div>
                     </div>
-                    <p>Confidence represents the highest probability among the three available academic outcome classes.</p>
+
                     <div class="result-meta">
                         <span><i class="bi bi-cpu"></i> {{ result.model_display }}</span>
                         <span><i class="bi bi-clock"></i> {{ result.timestamp }}</span>
                         <span><i class="bi bi-speedometer2"></i> {{ result.latency_ms }} ms</span>
                     </div>
-                    <a href="/predict" class="btn btn-primary w-100 mt-3"><i class="bi bi-arrow-repeat"></i> Make Another Prediction</a>
+
+                    <a href="/predict" class="btn btn-primary w-100 mt-3"><i class="bi bi-arrow-repeat me-1"></i> Make Another Prediction</a>
                 </div>
             </div>
+
             <div class="col-lg-7">
-                <div class="content-panel">
-                    <h3>Class probabilities</h3>
+                <div class="content-panel reveal reveal-delay-1">
+                    <h3><i class="bi bi-bar-chart-line me-2" style="background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>Class Probabilities</h3>
                     {% for label, probability in probabilities.items() %}
                     <div class="probability-row">
-                        <div><strong>{{ label }}</strong><span>{{ probability }}%</span></div>
+                        <div>
+                            <strong>
+                                {% if label == 'Graduate' %}<i class="bi bi-check-circle-fill me-1" style="color: var(--success);"></i>
+                                {% elif label == 'Dropout' %}<i class="bi bi-x-circle-fill me-1" style="color: var(--danger);"></i>
+                                {% else %}<i class="bi bi-hourglass-split me-1" style="color: var(--warning);"></i>{% endif %}
+                                {{ label }}
+                            </strong>
+                            <span>{{ probability }}%</span>
+                        </div>
                         <div class="progress"><div class="progress-bar" style="width: {{ probability }}%"></div></div>
                     </div>
                     {% endfor %}
-                    <h3 class="mt-4">Explanation</h3>
-                    <p>The model evaluates academic progress, semester grades, approval rates, financial risk, parent education, and engagement signals. This prediction is a decision-support output, not a final academic determination.</p>
+                </div>
+
+                <!-- Intervention Suggestions -->
+                <div class="intervention-card reveal reveal-delay-2">
+                    <h4>
+                        {% if result.prediction == 'Graduate' %}
+                        <i class="bi bi-trophy"></i> Strengths & Next Steps
+                        {% elif result.prediction == 'Dropout' %}
+                        <i class="bi bi-exclamation-triangle"></i> Recommended Interventions
+                        {% else %}
+                        <i class="bi bi-info-circle"></i> Guidance for Enrolled Students
+                        {% endif %}
+                    </h4>
+                    <ul class="intervention-list">
+                        {% if result.prediction == 'Graduate' %}
+                        <li>Strong academic trajectory — maintain current study habits and engagement levels</li>
+                        <li>Consider mentoring at-risk peers to strengthen your academic community</li>
+                        <li>Explore research opportunities, internships, or honors programs to maximize your potential</li>
+                        <li>Keep tuition payments current and maintain scholarship eligibility</li>
+                        {% elif result.prediction == 'Dropout' %}
+                        <li>Schedule a meeting with an academic advisor to review course load and support options</li>
+                        <li>Explore financial aid, scholarships, or emergency funding if debt is a contributing factor</li>
+                        <li>Consider academic tutoring or study groups for courses with lower grades</li>
+                        <li>Evaluate semester credit load — reducing it may improve grades and reduce burnout</li>
+                        <li>Connect with student wellness services for holistic support</li>
+                        {% else %}
+                        <li>Focus on improving approval rates by completing more enrolled credits successfully</li>
+                        <li>Work toward a grade improvement trend between semesters — models value upward trajectory</li>
+                        <li>Ensure tuition fees remain current to avoid financial risk flags</li>
+                        <li>Engage with career counseling to strengthen motivation and goal clarity</li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <div class="content-panel mt-4 reveal reveal-delay-3">
+                    <h3><i class="bi bi-info-circle me-2" style="background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>About This Prediction</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.8;">The model evaluates academic progress, semester grades, approval rates, financial risk, parent education, and engagement signals. This prediction is a <strong>decision-support output</strong>, not a final academic determination. Always combine ML insights with professional academic counseling.</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+{% if result.prediction == 'Graduate' %}
+<div class="confetti-container" id="confettiContainer"></div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if result.prediction == 'Graduate' %}
+<script>
+(function() {
+    const container = document.getElementById('confettiContainer');
+    if (!container) return;
+    const colors = ['#6366f1', '#06b6d4', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6'];
+    for (let i = 0; i < 60; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti';
+        piece.style.left = Math.random() * 100 + '%';
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animationDelay = Math.random() * 2 + 's';
+        piece.style.animationDuration = (2 + Math.random() * 2) + 's';
+        piece.style.width = (6 + Math.random() * 8) + 'px';
+        piece.style.height = (6 + Math.random() * 8) + 'px';
+        piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        container.appendChild(piece);
+    }
+    setTimeout(() => container.remove(), 5000);
+})();
+</script>
+{% endif %}
 {% endblock %}

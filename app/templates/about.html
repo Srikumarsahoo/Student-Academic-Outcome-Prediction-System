@@ -5,8 +5,8 @@
 {% block content %}
 <section class="page-header" id="top">
     <div class="container">
-        <span class="eyebrow">About</span>
-        <h1>Production-quality ML portfolio project</h1>
+        <span class="eyebrow"><i class="bi bi-info-circle"></i> About</span>
+        <h1>Production-Quality ML Portfolio Project</h1>
         <p>This application predicts academic outcomes while demonstrating clean architecture, model serving, research communication, validation, analytics, and deployment readiness.</p>
     </div>
 </section>
@@ -14,28 +14,36 @@
 <section class="section pt-0">
     <div class="container">
         <div class="row g-4">
-            <div class="col-lg-7">
+            <div class="col-lg-7 reveal">
                 <div class="content-panel">
-                    <h3>Project</h3>
-                    <p>The system helps students, researchers, and academic stakeholders explore whether a student is likely to graduate, drop out, or remain enrolled. It is designed as a modern SaaS-style web app rather than a notebook-only demonstration.</p>
-                    <h3>Dataset and workflow</h3>
-                    <p>The workflow includes preprocessing, feature engineering, trained scikit-learn models, probability explanation, anonymous prediction logging, and dashboard aggregation.</p>
-                    <h3>Future improvements</h3>
-                    <p>Planned enhancements include SHAP explanations, calibrated probabilities, additional models such as Gradient Boosting or XGBoost, richer research images, and role-based analytics.</p>
+                    <h3><i class="bi bi-rocket-takeoff me-2" style="background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>Project Overview</h3>
+                    <p>The system helps students, researchers, and academic stakeholders explore whether a student is likely to graduate, drop out, or remain enrolled. It is designed as a modern SaaS-style web application rather than a notebook-only demonstration.</p>
+
+                    <h3 class="mt-4"><i class="bi bi-gear me-2" style="background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>Dataset & Workflow</h3>
+                    <p>The workflow includes preprocessing, feature engineering, trained scikit-learn models, probability explanation, anonymous prediction logging, and dashboard aggregation — all served through a production-grade FastAPI backend.</p>
+
+                    <h3 class="mt-4"><i class="bi bi-lightbulb me-2" style="background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>Future Improvements</h3>
+                    <p>Planned enhancements include SHAP explanations, calibrated probabilities, additional models such as Gradient Boosting or XGBoost, richer research visualizations, and role-based analytics dashboards.</p>
                 </div>
             </div>
             <div class="col-lg-5">
-                <div class="content-panel">
-                    <h3>Technologies</h3>
+                <div class="content-panel reveal reveal-delay-1">
+                    <h3><i class="bi bi-code-slash me-2" style="background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>Technologies</h3>
                     <div class="tech-grid compact">
                         <span>FastAPI</span><span>Pydantic</span><span>Jinja2</span><span>Bootstrap</span><span>Chart.js</span><span>Scikit-learn</span><span>Joblib</span><span>Pandas</span>
                     </div>
-                    <h3 class="mt-4">Models</h3>
+
+                    <h3 class="mt-4"><i class="bi bi-cpu me-2" style="background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>Models</h3>
                     {% for model in models %}
-                    <div class="model-line"><strong>{{ model.display_name }}</strong><span>{{ model.description }}</span></div>
+                    <div class="model-line">
+                        <strong>{{ model.display_name }} {% if model.recommended %}<span class="badge text-bg-primary">Recommended</span>{% endif %}</strong>
+                        <span>{{ model.description }}</span>
+                    </div>
                     {% endfor %}
-                    <h3 class="mt-4">Author</h3>
-                    <p>Srikumar Sahoo</p>
+
+                    <h3 class="mt-4"><i class="bi bi-person-circle me-2" style="background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>Author</h3>
+                    <p style="font-weight: 700; margin-bottom: 0.25rem;">Srikumar Sahoo</p>
+                    <p style="color: var(--text-secondary); font-size: 0.88rem;">Data Science & ML Engineering</p>
                 </div>
             </div>
         </div>
