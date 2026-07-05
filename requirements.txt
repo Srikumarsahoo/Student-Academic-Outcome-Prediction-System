@@ -1,24 +1,14 @@
-fastapi
-uvicorn
-gunicorn
-jinja2
-python-multipart
+fastapi==0.139.0
+uvicorn==0.50.0
+gunicorn==26.0.0
+jinja2==3.1.6
+python-multipart==0.0.32
 
-pandas
-numpy
+pandas==3.0.3
+numpy==2.4.6
 scikit-learn==1.6.1
-joblib
+scipy==1.17.1
+joblib==1.5.3
 
-matplotlib
-seaborn
-
-python-dotenv
-
-aiofiles
-
-pydantic
-
-python-json-logger
-
-pytest
-httpx
+python-dotenv==1.2.2
+pydantic==2.13.4
